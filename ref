@@ -44,6 +44,13 @@ if __name__=="__main__":
         help='show list of keys.'
         )
     argparser.add_argument(
+        '--pager',
+        dest='pager',
+        nargs=1,
+        default=["less"],
+        help='specify pager to read file'
+        )
+    argparser.add_argument(
         'key',
         nargs='?',
         help='show documet corresponding to key.'
@@ -61,7 +68,7 @@ if __name__=="__main__":
             for key in items:
                 print(key)
         elif args.key != None:
-            subprocess.run(["less",items[args.key]["objname"]])
+            subprocess.run([args.pager[0],items[args.key]["objname"]])
         else:
             argparser.print_help()
     except KeyError as e:
