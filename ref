@@ -1,0 +1,21 @@
+#!/usr/bin/python3
+
+import subprocess 
+import os
+import sys
+import pickle
+
+if __name__=="__main__":
+    filename=os.path.expanduser("~/.refitems")
+    if os.path.exists(filename):
+        with open(filename,"rb") as f:
+            items=pickle.load(f)
+    else:
+        items={}
+
+    if sys.argv[1] == "--add":
+        items[sys.argv[2]]={"objname":os.path.abspath(sys.argv[3])}
+        with open(filename,"wb") as f:
+            pickle.dump(items,f)
+    else:
+        subprocess.run(["less",items[sys.argv[1]]["objname"]])
