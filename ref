@@ -20,5 +20,9 @@ if __name__=="__main__":
     elif sys.argv[1] == "--list":
         for key in items:
             print(key)
+    elif sys.argv[1] == "--del":
+        del items[sys.argv[2]]
+        with open(filename,"wb") as f:
+            pickle.dump(items,f)
     else:
         subprocess.run(["less",items[sys.argv[1]]["objname"]])
