@@ -50,16 +50,19 @@ if __name__=="__main__":
         )
     args=argparser.parse_args()
 
-    if args.add != None:
-        items[args.add[0]]={"objname":os.path.abspath(args.add[1])}
-        saveItems(items,filename)
-    elif args._del != None:
-        del items[args._del[0]]
-        saveItems(items,filename)
-    elif args.list:
-        for key in items:
-            print(key)
-    elif args.key != None:
-        subprocess.run(["less",items[args.key]["objname"]])
-    else:
-        argparser.print_help()
+    try:
+        if args.add != None:
+            items[args.add[0]]={"objname":os.path.abspath(args.add[1])}
+            saveItems(items,filename)
+        elif args._del != None:
+            del items[args._del[0]]
+            saveItems(items,filename)
+        elif args.list:
+            for key in items:
+                print(key)
+        elif args.key != None:
+            subprocess.run(["less",items[args.key]["objname"]])
+        else:
+            argparser.print_help()
+    except KeyError as e:
+        print("No items matches key %s"%(str(e)))
