@@ -5,24 +5,30 @@ import os
 import sys
 import pickle
 
-if __name__=="__main__":
-    filename=os.path.expanduser("~/.refitems")
+def loadItems(filename):
     if os.path.exists(filename):
         with open(filename,"rb") as f:
             items=pickle.load(f)
     else:
         items={}
+    return items
+
+def saveItems(items,filename):
+    with open(filename,"wb") as f:
+        pickle.dump(items,f)
+
+if __name__=="__main__":
+    filename=os.path.expanduser("~/.refitems")
+    items=loadItems(filename)
 
     if sys.argv[1] == "--add":
         items[sys.argv[2]]={"objname":os.path.abspath(sys.argv[3])}
-        with open(filename,"wb") as f:
-            pickle.dump(items,f)
+        saveItems(items,filename)
     elif sys.argv[1] == "--list":
         for key in items:
             print(key)
     elif sys.argv[1] == "--del":
         del items[sys.argv[2]]
-        with open(filename,"wb") as f:
-            pickle.dump(items,f)
+        saveItems(items,filename)
     else:
         subprocess.run(["less",items[sys.argv[1]]["objname"]])
