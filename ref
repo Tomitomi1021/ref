@@ -17,5 +17,8 @@ if __name__=="__main__":
         items[sys.argv[2]]={"objname":os.path.abspath(sys.argv[3])}
         with open(filename,"wb") as f:
             pickle.dump(items,f)
+    elif sys.argv[1] == "--list":
+        for key in items:
+            print(key)
     else:
         subprocess.run(["less",items[sys.argv[1]]["objname"]])
