@@ -4,6 +4,7 @@ import subprocess
 import os
 import sys
 import pickle
+from argparse import ArgumentParser
 
 def loadItems(filename):
     if os.path.exists(filename):
@@ -21,14 +22,44 @@ if __name__=="__main__":
     filename=os.path.expanduser("~/.refitems")
     items=loadItems(filename)
 
-    if sys.argv[1] == "--add":
-        items[sys.argv[2]]={"objname":os.path.abspath(sys.argv[3])}
+    argparser=ArgumentParser()
+    argparser.add_argument(
+        '--add',
+        dest='add',
+        nargs=2,
+        metavar=('key','filename'),
+        help='add a key into list.'
+        )
+    argparser.add_argument(
+        '--del',
+        dest='_del',
+        nargs=1,
+        metavar='key',
+        help='delete a key.'
+        )
+    argparser.add_argument(
+        '--list',
+        dest='list',
+        action='store_true',
+        help='show list of keys.'
+        )
+    argparser.add_argument(
+        'key',
+        nargs='?',
+        help='show documet corresponding to key.'
+        )
+    args=argparser.parse_args()
+
+    if args.add != None:
+        items[args.add[0]]={"objname":os.path.abspath(args.add[1])}
         saveItems(items,filename)
-    elif sys.argv[1] == "--list":
+    elif args._del != None:
+        del items[args._del[0]]
+        saveItems(items,filename)
+    elif args.list:
         for key in items:
             print(key)
-    elif sys.argv[1] == "--del":
-        del items[sys.argv[2]]
-        saveItems(items,filename)
+    elif args.key != None:
+        subprocess.run(["less",items[args.key]["objname"]])
     else:
-        subprocess.run(["less",items[sys.argv[1]]["objname"]])
+        argparser.print_help()
